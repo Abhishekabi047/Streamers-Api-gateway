@@ -1,0 +1,46 @@
+syntax="proto3";
+
+package auth;
+
+option go_package="./pkg/pb/auth";
+
+service AuthService{
+    rpc Signup(SignUpRequest) returns(SignUpResponse) {}
+    rpc Otp(OtpRequest) returns(OtpResponse) {}
+    rpc Login(LoginRequest) returns(LoginResponse) {}
+}
+
+message SignUpRequest{
+    string username=1;
+    string dob=2;
+    string email=3;
+    string phone=4;
+    string password=5;
+    string cpassword=6;
+    string category=7;
+}
+
+message SignUpResponse{
+    string key=1;
+    string message=2;
+}
+
+message OtpRequest{
+    string key=1;
+    string otp=2;
+}
+
+message OtpResponse{
+    string message=1;
+}
+
+message LoginRequest{
+    string email=1;
+    string password=2;
+}
+
+message LoginResponse{
+    string status=1;
+    int64 id=3;
+    string token=2;
+}
