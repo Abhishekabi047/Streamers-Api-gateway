@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(r *gin.RouterGroup,authHandler handlers.AuthHandler){
+func AuthRoutes(r *gin.RouterGroup,authHandler handlers.AuthHandler){
 	r.Use(middlewares.CorsMiddleware)
 
 	r.POST("/user/signup",authHandler.Signup)

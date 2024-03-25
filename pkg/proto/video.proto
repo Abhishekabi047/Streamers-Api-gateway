@@ -1,0 +1,112 @@
+syntax="proto3";
+
+package pb;
+
+option go_package ="./pkg/pb/video";
+
+service VideoService{
+    rpc UploadVideo(stream UploadVideoRequest) returns (UploadVideoResponse) {}
+    rpc StreamVideo(StreamVideoRequest) returns (stream StreamVideoResponse) {}
+    rpc FindAllVideo(FindAllVideoRequest) returns (FindAllVideoResponse) {}
+    rpc FindUserVideo(FindUserVideoRequest) returns (FindUserVideoResponse) {}
+    rpc GetVideoById(GetVideoByIdRequest) returns (GetVideoByIdResponse) {}
+    rpc FindArchivedVideoByUserId(FindArchivedVideoByUserIdRequest) returns (FindArchivedVideoByUserIdResponse) {}
+    rpc ArchiveVideo(ArchiveVideoRequest) returns (ArchiveVideoResponse) {}
+}
+
+message UploadVideoRequest{
+    string filename =1;
+    bytes data=2;
+    string title=3;
+    string description=4;
+    string category=5;
+    string username=6;
+    string video_id=8;
+    int32 userId=9;
+}
+
+message UploadVideoResponse{
+    int32 status=1;
+    string message=2;
+    string videoId=3;
+}
+
+message StreamVideoRequest{
+    string videoid=1;
+    string playlist=2;
+}
+
+message StreamVideoResponse{
+    bytes video_chunk=1;
+}
+
+message FindAllRequest {}
+
+message VideoID{
+    string VideoId=1;
+}
+
+message FindAllResponse{
+    int32 status=1;
+    repeated VideoID videos=2;
+}
+
+message FindUserVideoRequest {
+    int32 userid =1;
+}
+
+message FindUserVideoResponse {
+    repeated FetchVideo videos = 1;
+}
+
+message FetchVideo {
+    string VideoId = 1;
+    string category = 4;
+    string title = 6;
+    string S3Path = 7;
+    bool archived = 8;
+    uint32 views = 9;
+    string discription = 11;
+    bool blocked = 14;
+    int32 ownerId = 15;
+    string username =16;
+}
+
+message FindAllVideoRequest {}
+
+message FindAllVideoResponse {
+    repeated FetchVideo videos = 1;
+}
+
+message GetVideoByIdRequest{
+    string videoID =1;
+    int32 userId=2;
+}
+
+message GetVideoByIdResponse{
+    string VideoId = 1;
+    string userName = 2;
+    string category = 3;
+    string title = 4;
+    string S3Path = 5;
+    bool archived = 6; 
+    uint32 views = 7;
+    string discription = 8;
+    bool blocked = 9;
+   
+}
+
+message ArchiveVideoRequest {
+    string videoId = 1;
+}
+message ArchiveVideoResponse{
+    bool status = 1;
+}
+message FindArchivedVideoByUserIdRequest {
+    int32 userid = 1;
+}
+
+
+message FindArchivedVideoByUserIdResponse {
+    repeated FetchVideo videos = 1;
+}

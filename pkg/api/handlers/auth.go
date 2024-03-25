@@ -81,7 +81,7 @@ func (cc *AuthHandler) Login(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println("check 2")
+	fmt.Println("check 2",res.Id)
 	token:= middlewares.CreateJwtCookie(int(res.Id), email, "user", c)
 
 	c.JSON(http.StatusOK, gin.H{"Message": "login succesful","token":token})

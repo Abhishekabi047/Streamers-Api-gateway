@@ -22,7 +22,13 @@ func InitializeApi(c *config.Config) (*api.Server, error) {
 	}
 	authClient := auth.NewAuthServiceClient(authServiceClient)
 	authHandler := handlers.NewAuthHandler(authClient)
-	server, err := api.NewserverHttp(c, authHandler)
+	videoServiceClient, err := auth.InitVideoClient(c)
+	if err != nil {
+		return nil, err
+	}
+	videoClient := auth.NewVideoClient(videoServiceClient)
+	videoHandler := handlers.NewVideoHandler(videoClient)
+	server, err := api.NewserverHttp(c, authHandler, videoHandler)
 	if err != nil {
 		return nil, err
 	}
