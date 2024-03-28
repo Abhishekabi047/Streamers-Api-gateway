@@ -8,9 +8,7 @@ import (
 
 	"api/pkg/pb/video"
 	"context"
-	"errors"
 	"io"
-	"log"
 	"mime/multipart"
 
 	errr "github.com/pkg/errors"
@@ -49,7 +47,7 @@ func (c *VideoClient) UploadVideo(ctx context.Context, file *multipart.FileHeade
 	}
 	chunkSize := 4096
 	buffer := make([]byte, chunkSize)
-	fmt.Println("user",req.UserID)
+	fmt.Println("user", req.UserID)
 	for {
 		n, err := uploadFile.Read(buffer)
 		if err == io.EOF {
@@ -77,24 +75,6 @@ func (c *VideoClient) UploadVideo(ctx context.Context, file *multipart.FileHeade
 	return resposne, nil
 }
 
-// func (c *VideoClient) StreamVideo(ctx context.Context, filename, playlist string) (video.VideoService_StreamVideoClient, error) {
-// 	res, err := c.Server.StreamVideo(ctx, &video.StreamVideoRequest{
-// 		Videoid:  filename,
-// 		Playlist: playlist,
-// 	})
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return res, nil
-// }
-
-// func (c *VideoClient) FindAllVideo(ctx context.Context) (*video.FindAllResponse, error) {
-// 	res, err := c.Server.FindAllVideo(ctx, &video.FindAllRequest{})
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return res, nil
-// }
 
 func (c *VideoClient) GetUserVideos(ctx context.Context, req models.GetUserVideoRequest) (*video.FindUserVideoResponse, error) {
 	res, err := c.Server.FindUserVideo(ctx, &video.FindUserVideoRequest{
@@ -115,14 +95,13 @@ func (c *VideoClient) FindAllVideo(ctx context.Context) (*video.FindAllVideoResp
 }
 
 func (c *VideoClient) GetVideoById(ctx context.Context, req models.GetVideoId) (*video.GetVideoByIdResponse, error) {
-	userId, ok := ctx.Value("userId").(int)
-	if !ok {
-		log.Println("userId not found in context")
-		return nil, errors.New("login again")
-	}
+	// userId, ok := ctx.Value("userId").(int)
+	// if !ok {
+	// 	log.Println("userId not found in context")
+	// 	return nil, errors.New("login again")
+	// }
 	res, err := c.Server.GetVideoById(ctx, &video.GetVideoByIdRequest{
 		VideoID: req.VideoId,
-		UserId:  int32(userId),
 	})
 	if err != nil {
 		return nil, err
@@ -149,3 +128,98 @@ func (c *VideoClient) FindArchivedVideos(ctx context.Context, req models.GetUser
 	}
 	return res, nil
 }
+
+
+func (c *VideoClient) UploadClip(ctx context.Context, file *multipart.FileHeader, req models.UploadClip) (*video.UploadClipResponse, error) {
+	uploadFile, err := file.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer uploadFile.Close()
+	stream, err := c.Server.UploadClip(ctx)
+	if err != nil {
+		return nil, errr.Wrap(err, "failde to start upload stream")
+	}
+	chunkSize := 4096
+	buffer := make([]byte, chunkSize)
+	fmt.Println("user", req.UserID)
+	for {
+		n, err := uploadFile.Read(buffer)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		if err := stream.Send(&video.UploadClipRequest{
+			Filename:    file.Filename,
+			Data:        buffer[:n],
+			Title:       req.Title,
+			UserId:      int32(req.UserID),
+			Category:    req.Category,
+		}); err != nil {
+			return nil, err
+		}
+
+	}
+	resposne, err := stream.CloseAndRecv()
+	if err != nil {
+		return nil, err
+	}
+	return resposne, nil
+}
+
+
+func (c *VideoClient) GetUserClips(ctx context.Context, req models.GetUserVideoRequest) (*video.FindUserClipResponse, error) {
+	res, err := c.Server.FindUserClip(ctx, &video.FindUserClipRequest{
+		Userid: int32(req.User),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (c *VideoClient) FindAllClip(ctx context.Context) (*video.FindAllClipResponse, error) {
+	res, err := c.Server.FindAllClip(ctx, &video.FindAllClipRequest{})
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (c *VideoClient) GetClipById(ctx context.Context, req models.GetVideoId) (*video.GetClipByIdResponse, error) {
+	// userId, ok := ctx.Value("userId").(int)
+	// if !ok {
+	// 	log.Println("userId not found in context")
+	// 	return nil, errors.New("login again")
+	// }
+	res, err := c.Server.GetClipById(ctx, &video.GetClipByIdRequest{
+		ClipId: req.VideoId,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (c *VideoClient) ArchiveClip(ctx context.Context, req models.ArchivedVideos) (*video.ArchiveClipResponse, error) {
+	res, err := c.Server.ArchiveClip(ctx, &video.ArchiveClipRequest{
+		ClipId: req.VideoId,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (c *VideoClient) FindArchivedClips(ctx context.Context, req models.GetUserVideoRequest) (*video.FindArchivedClipByUserIdResponse, error) {
+	res, err := c.Server.FindArchivedClipByUserId(ctx, &video.FindArchivedClipByUserIdRequest{
+		Userid: int32(req.User),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+

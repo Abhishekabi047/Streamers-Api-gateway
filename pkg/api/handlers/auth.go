@@ -4,6 +4,7 @@ import (
 	"api/pkg/client/interfaces"
 	"api/pkg/middlewares"
 	"api/pkg/models"
+	"api/pkg/utils"
 	"context"
 	"fmt"
 	"net/http"
@@ -40,8 +41,10 @@ func (cc *AuthHandler) Signup(c *gin.Context) {
 
 	res, err := cc.Client.Signup(context.Background(), body)
 	if err != nil {
+		errmsg:=utils.ExtractError(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			"message":errmsg,
+			"error": err,
 		})
 		return
 	}
@@ -76,7 +79,9 @@ func (cc *AuthHandler) Login(c *gin.Context) {
 	
 	res, err := cc.Client.Login(context.Background(), body)
 	if err != nil {
+		errMsg:=utils.ExtractError(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
+			"message":errMsg,
 			"err": err.Error(),
 		})
 		return

@@ -19,3 +19,9 @@ type GetVideoId struct {
 type ArchivedVideos struct {
 	VideoId string `json:"videoid"`
 }
+
+type UploadClip struct {
+	UserID      int    `json:"userid"`
+	Title       string `json:"title"`
+	Category    string `json:"category"`
+}

@@ -6,12 +6,94 @@ option go_package ="./pkg/pb/video";
 
 service VideoService{
     rpc UploadVideo(stream UploadVideoRequest) returns (UploadVideoResponse) {}
+    rpc UploadClip(stream UploadClipRequest) returns (UploadClipResponse) {}
     rpc StreamVideo(StreamVideoRequest) returns (stream StreamVideoResponse) {}
     rpc FindAllVideo(FindAllVideoRequest) returns (FindAllVideoResponse) {}
+    rpc FindAllClip(FindAllClipRequest) returns (FindAllClipResponse) {}
     rpc FindUserVideo(FindUserVideoRequest) returns (FindUserVideoResponse) {}
+    rpc FindUserClip(FindUserClipRequest) returns (FindUserClipResponse) {}
     rpc GetVideoById(GetVideoByIdRequest) returns (GetVideoByIdResponse) {}
+    rpc GetClipById(GetClipByIdRequest) returns (GetClipByIdResponse) {}
     rpc FindArchivedVideoByUserId(FindArchivedVideoByUserIdRequest) returns (FindArchivedVideoByUserIdResponse) {}
     rpc ArchiveVideo(ArchiveVideoRequest) returns (ArchiveVideoResponse) {}
+    rpc FindArchivedClipByUserId(FindArchivedClipByUserIdRequest) returns (FindArchivedClipByUserIdResponse) {}
+    rpc ArchiveClip(ArchiveClipRequest) returns (ArchiveClipResponse) {}
+}
+
+message FindArchivedClipByUserIdResponse{
+    repeated FetchClip clips = 1;
+}
+
+message FindArchivedClipByUserIdRequest{
+    int32 userid = 1;
+}
+
+message ArchiveClipRequest{
+    string clipId = 1;
+}
+
+message ArchiveClipResponse{
+    bool status = 1;
+}
+
+message GetClipByIdRequest{
+    string clipId =1;
+}
+
+message GetClipByIdResponse{
+    string clipId = 1;
+    string userName = 2;
+    string category = 3;
+    string title = 4;
+    string S3Path = 5;
+    bool archived = 6; 
+    uint32 views = 7;
+    string discription = 8;
+    bool blocked = 9;
+}
+
+message FindUserClipRequest{
+    int32 userid =1;
+}
+
+message FindUserClipResponse{
+    repeated FetchClip clips = 1;
+}
+
+message FindAllClipRequest{
+
+}
+
+message FetchClip {
+    string clipId = 1;
+    string category = 4;
+    string title = 6;
+    string S3Path = 7;
+    bool archived = 8;
+    uint32 views = 9;
+    bool blocked = 14;
+    int32 ownerId = 15;
+    string username =16;
+}
+
+message FindAllClipResponse{
+    repeated FetchClip clips = 1;
+}
+
+message UploadClipRequest{
+    string filename =1;
+    bytes data=2;
+    string title=3;
+    string username=6;
+    string category=5;
+    string clip_id=8;
+    int32 userId=9;
+}
+
+message UploadClipResponse{
+    int32 status=1;
+    string message=2;
+    string videoId=3;
 }
 
 message UploadVideoRequest{
