@@ -13,7 +13,7 @@ func main() {
 	}
 	server,dier:=di.InitializeApi(c)
 	if dier != nil{
-		log.Fatal("cannot intitalize server",dier)
+		log.Fatal("cannot intitalize server: ",dier)
 	}
 	server.Start()
 }

@@ -10,6 +10,6 @@ import (
 )
 
 func InitializeAp(c *config.Config) (*api.Server, error) {
-	wire.Build(auth.InitClient, auth.InitVideoClient, auth.NewVideoClient, auth.NewAuthServiceClient, handlers.NewAuthHandler, handlers.NewVideoHandler, api.NewserverHttp)
+	wire.Build(auth.InitClient, auth.InitVideoClient,auth.InitChatClient,auth.NewChatServiceClient,handlers.NewChatHandler, auth.NewVideoClient, auth.NewAuthServiceClient, handlers.NewAuthHandler, handlers.NewVideoHandler, api.NewserverHttp)
 	return &api.Server{}, nil
 }

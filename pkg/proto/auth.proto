@@ -8,6 +8,32 @@ service AuthService{
     rpc Signup(SignUpRequest) returns(SignUpResponse) {}
     rpc Otp(OtpRequest) returns(OtpResponse) {}
     rpc Login(LoginRequest) returns(LoginResponse) {}
+    rpc SearchUser(SearchUserRequest) returns(SearchUserResponse) {}
+    rpc UserExists(UserExistsRequest) returns(UserExistsResponse) {}
+
+}
+
+message UserExistsRequest{
+    string username=1;
+}
+
+message UserExistsResponse{
+    bool username=1;
+}
+
+message SearchUserRequest{
+    string username=1;
+    int32 limit=2;
+    int32 offset=3;
+}
+
+message SearchUserResponse{
+    repeated User userdetails=1;
+}
+
+message User{
+    string username=2;
+    string profilepic=3;
 }
 
 message SignUpRequest{
@@ -43,4 +69,5 @@ message LoginResponse{
     string status=1;
     int64 id=3;
     string token=2;
+    string username=4;
 }

@@ -65,3 +65,15 @@ func(c *AuthClient) Login(ctx context.Context,req models.Login) (*auth.LoginResp
 	}
 	return res,nil
 }
+
+func (c *AuthClient) SearchUser(ctx context.Context,req models.SearchRequest) (*auth.SearchUserResponse,error) {
+	res,err:=c.Server.SearchUser(ctx,&auth.SearchUserRequest{
+		Username: req.Username,
+		Limit: int32(req.Limit),
+		Offset: int32(req.Offset),
+	})
+	if err != nil{
+		return nil,err
+	}
+	return res,nil
+}

@@ -142,7 +142,7 @@ func (c *VideoClient) UploadClip(ctx context.Context, file *multipart.FileHeader
 	}
 	chunkSize := 4096
 	buffer := make([]byte, chunkSize)
-	fmt.Println("user", req.UserID)
+	fmt.Println("user 1", req.UserID)
 	for {
 		n, err := uploadFile.Read(buffer)
 		if err == io.EOF {

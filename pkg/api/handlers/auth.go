@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -89,5 +90,31 @@ func (cc *AuthHandler) Login(c *gin.Context) {
 	fmt.Println("check 2",res.Id)
 	token:= middlewares.CreateJwtCookie(int(res.Id), email, "user", c)
 
-	c.JSON(http.StatusOK, gin.H{"Message": "login succesful","token":token})
+	c.JSON(http.StatusOK, gin.H{"Message": "login succesful","token":token,"username":res.Username})
+}
+
+func (a *AuthHandler) SearchUser(c *gin.Context) {
+	user:=c.PostForm("username")
+	limit:=c.Query("limit")
+	limitin,_:=strconv.Atoi(limit)
+	offset:=c.Query("offset")
+	offsetin,_:=strconv.Atoi(offset)
+	userde:=&models.SearchRequest{
+		Username: user,
+		Offset: offsetin,
+		Limit: limitin,
+	}
+	fmt.Println("user",user)
+	res,err:=a.Client.SearchUser(context.Background(),*userde) 
+	if err != nil {
+		errMsg:=utils.ExtractError(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":errMsg,
+			"err": err.Error(),
+		})
+		return
+	}
+	fmt.Println("res",res.Userdetails)
+	c.JSON(http.StatusOK,res)
+
 }

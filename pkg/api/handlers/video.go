@@ -217,7 +217,7 @@ func (v *VideoHandler) UploadClip(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Failed to find file",
-			"error":   "error",
+			"error":   err.Error(),
 		})
 		return
 	}
@@ -225,7 +225,7 @@ func (v *VideoHandler) UploadClip(c *gin.Context) {
 	if err1 != nil {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{
 			"message": "failed to find file",
-			"error":   "error",
+			"error":   err1.Error(),
 		})
 		return
 	}
@@ -255,7 +255,11 @@ func (h *VideoHandler) FindUserClip(ctx *gin.Context) {
 		})
 		return
 	}
-	ctx.JSON(http.StatusOK, &res)
+	ctx.JSON(http.StatusOK, gin.H{
+		"status":"200",
+		"message":"User clip fetched",
+		"data":res,
+	})
 
 }
 
@@ -270,7 +274,11 @@ func (h *VideoHandler) FindAllClip(ctx *gin.Context) {
 			"error":   err,
 		})
 	}
-	ctx.JSON(http.StatusOK, &res)
+	ctx.JSON(http.StatusOK, gin.H{
+		"status":"200",
+		"message":"All clip fetched",
+		"data":res,
+	})
 }
 
 
@@ -296,7 +304,11 @@ func (h *VideoHandler) GetClipById(ctx *gin.Context) {
 		})
 		return
 	}
-	ctx.JSON(http.StatusOK, &res)
+	ctx.JSON(http.StatusOK, gin.H{
+		"status":"200",
+		"message":"All clip fetched",
+		"data":res,
+	})
 }
 
 
@@ -317,7 +329,11 @@ func (h *VideoHandler) ArchiveClip(ctx *gin.Context) {
 		})
 		return
 	}
-	ctx.JSON(http.StatusOK, &res)
+	ctx.JSON(http.StatusOK, gin.H{
+		"status":"200",
+		"message":"Clip Archive Toggled",
+		"data":res,
+	})
 }
 
 func (h *VideoHandler) FindArchivedClips(ctx *gin.Context) {
@@ -343,5 +359,9 @@ func (h *VideoHandler) FindArchivedClips(ctx *gin.Context) {
 		})
 		return
 	}
-	ctx.JSON(http.StatusOK, &res)
+	ctx.JSON(http.StatusOK, gin.H{
+		"status":"200",
+		"message":"Archived Clips",
+		"data":res,
+	})
 }

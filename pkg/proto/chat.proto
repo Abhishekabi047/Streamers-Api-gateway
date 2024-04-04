@@ -1,0 +1,56 @@
+syntax="proto3";
+
+package chat;
+
+option go_package="./pkg/pb/chat";
+
+service ChatService{
+    rpc ChatHistory(ChatHistoryRequest) returns(ChatHistoryResponse) {}
+    rpc ContactList(ContactListRequest) returns(ContactListResponse) {}
+    rpc VerifyContact(VerifyContactRequest) returns(VerifyContactResponse) {}
+}
+
+message VerifyContactRequest{
+    string username=1;
+}
+
+message VerifyContactResponse{
+    bool exists=1;
+}
+
+message ChatHistoryRequest{
+    string username1=1;
+    string username2=2;
+    string fromTs=3;
+    string toTs=4;
+}
+
+message ChatHistoryResponse{
+    string status=1;
+    string message=2;
+    repeated Chat chat=3;
+
+}
+
+message Chat{
+    string id=1;
+    string from=2;
+    string to=3;
+    string message=4;
+    int64 timestamp=5;
+}
+
+message ContactListRequest{
+    string username=1;
+}
+
+message ContactListResponse{
+    string status=1;
+    string message=2;
+    repeated ContactLists List=3;
+}
+
+message ContactLists{
+    string username=1;
+    int64 lastActivity=2;
+}

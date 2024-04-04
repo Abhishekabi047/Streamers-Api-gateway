@@ -14,11 +14,12 @@ type Server struct {
 	Port   string
 }
 
-func NewserverHttp(c *config.Config, Authhandler handlers.AuthHandler,videohandler handlers.VideoHandler) (*Server, error) {
+func NewserverHttp(c *config.Config, Authhandler handlers.AuthHandler,videohandler handlers.VideoHandler,chatHandler handlers.ChatHandler) (*Server, error) {
 	engine := gin.New()
 	engine.Use(gin.Logger())
 	routers.AuthRoutes(engine.Group("/"), Authhandler)
 	routers.VideoRoutes(engine.Group("/video"), videohandler)
+	routers.ChatRoutes(engine.Group("/"),chatHandler)
 	
 	engine.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{

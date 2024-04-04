@@ -13,4 +13,5 @@ func AuthRoutes(r *gin.RouterGroup,authHandler handlers.AuthHandler){
 	r.POST("/user/signup",authHandler.Signup)
 	r.POST("/user/otp",authHandler.Otp)
 	r.POST("/user/login",middlewares.CorsMiddleware,authHandler.Login)
+	r.POST("/user/search",middlewares.CorsMiddleware,authHandler.SearchUser)
 }

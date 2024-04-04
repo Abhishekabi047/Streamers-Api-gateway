@@ -28,7 +28,13 @@ func InitializeApi(c *config.Config) (*api.Server, error) {
 	}
 	videoClient := auth.NewVideoClient(videoServiceClient)
 	videoHandler := handlers.NewVideoHandler(videoClient)
-	server, err := api.NewserverHttp(c, authHandler, videoHandler)
+	chatServiceClient, err := auth.InitChatClient(c)
+	if err != nil {
+		return nil, err
+	}
+	chatClient := auth.NewChatServiceClient(chatServiceClient)
+	chatHandler := handlers.NewChatHandler(chatClient)
+	server, err := api.NewserverHttp(c, authHandler, videoHandler, chatHandler)
 	if err != nil {
 		return nil, err
 	}

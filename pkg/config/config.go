@@ -5,11 +5,12 @@ import "github.com/spf13/viper"
 type Config struct{
 	Port string `mapstructure:"PORT"`
 	AuthService string `mapstructure:"AUTH_SRV"`
+	ChatService string `mapstructure:"CHAT_SRV"`
 	VideoService string `mapstructure:"VIDEO_SRV"`
 	Jwt string `mapstructure:"JWT"`
 }
 
-var envs =[]string{"AUTH_SRV","PORT","VIDEO_SRV"}
+var envs =[]string{"AUTH_SRV","PORT","VIDEO_SRV","CHAT_SRV"}
 
 func LoadConfig() (config *Config,err error){
 	viper.AddConfigPath("./")

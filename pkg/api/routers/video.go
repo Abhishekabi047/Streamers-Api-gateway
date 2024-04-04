@@ -10,6 +10,9 @@ import (
 func VideoRoutes(r *gin.RouterGroup, videoHandler handlers.VideoHandler) {
 	r.GET("/list-all", middlewares.CorsMiddleware,videoHandler.FindAllVideo)
 	r.GET("/get-by-id", middlewares.CorsMiddleware, videoHandler.GetVideoById)
+	r.GET("/list-all-clip", middlewares.CorsMiddleware,videoHandler.FindAllClip)
+	r.GET("/get-clip-by-id", middlewares.CorsMiddleware, videoHandler.GetClipById)
+
 
 	r.Use(middlewares.UserRetriveCookie,middlewares.CorsMiddleware)
 
@@ -19,4 +22,10 @@ func VideoRoutes(r *gin.RouterGroup, videoHandler handlers.VideoHandler) {
 	
 	r.POST("/archive-video", videoHandler.ArchiveVideo)
 	
+
+	r.POST("/upload-clip", videoHandler.UploadClip)
+	r.GET("/user-clipss", videoHandler.FindUserClip)
+	r.GET("/user-archived-clips", videoHandler.FindArchivedClips)
+	
+	r.POST("/archive-clip", videoHandler.ArchiveClip)
 }
